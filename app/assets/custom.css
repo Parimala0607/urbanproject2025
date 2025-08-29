@@ -127,19 +127,18 @@ html, body {
 /* =========================
    Toggle Buttons (Pill Segmented Control)
    ========================= */
-/* Pill segmented control for dbc.RadioItems */
-/* Pill segmented control for ButtonGroup */
+
 .version-toggle {
-  display: inline-flex;   /* keep group tight */
+  display: inline-flex;   
 }
 
 .version-toggle .btn {
-  margin: 0 !important;        /* remove gaps */
-  border-radius: 0 !important; /* square middle */
+  margin: 0 !important;        
+  border-radius: 0 !important; 
   box-shadow: none !important;
 }
 
-/* round only the outer ends */
+
 .version-toggle .btn:first-child {
   border-top-left-radius: 20px !important;
   border-bottom-left-radius: 20px !important;
@@ -151,12 +150,12 @@ html, body {
 
 /* active (primary) */
 .version-toggle .btn-primary {
-  background-color: #1E50D6 !important;  /* your --uaqe-blue */
+  background-color: #1E50D6 !important; 
   border-color: #1E50D6 !important;
   color: #fff !important;
 }
 
-/* inactive (secondary) – make it the light grey pill */
+
 .version-toggle .btn-secondary {
   background-color: #e9ecef !important;
   border: 1px solid #ced4da !important;

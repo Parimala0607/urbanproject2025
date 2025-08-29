@@ -9,7 +9,7 @@ def nav_item(href, label, icon):
             html.Span(label),
         ],
         href=href,
-        active="exact",             # exact match for clean highlighting
+        active="exact",            
         className="side-link nav-link",
         id=f"side-{label.lower().replace(' & ', '-').replace(' ', '-')}"
     )

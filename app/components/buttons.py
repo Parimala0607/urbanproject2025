@@ -4,19 +4,12 @@ from dash import dcc, html
 # 1. Data Version Toggle (ButtonGroup)
 
 def data_version_toggle(id="data-version", value="v1"):
-    return dbc.RadioItems(
-        id=id,
-        options=[
-            {"label": "Version 1", "value": "v1"},
-            {"label": "Version 2", "value": "v2"},
-        ],
-        value=value,
-        inputClassName="btn-check",            
-        labelClassName="btn btn-outline-primary me-2",   
-        labelCheckedClassName="btn btn-primary",
-        className="version-toggle d-flex",     
-        inline=True,                           
-    )
+    return dbc.ButtonGroup([
+        dbc.Button("Version 1", id=f"{id}-v1",
+                   color="primary" if value=="v1" else "secondary"),
+        dbc.Button("Version 2", id=f"{id}-v2",
+                   color="primary" if value=="v2" else "secondary"),
+    ], className="version-toggle")
 
 # 2. Pollutant Type Dropdown
 def pollutant_type_dropdown(id="pollutant-type"):

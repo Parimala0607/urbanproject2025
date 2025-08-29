@@ -1,0 +1,160 @@
+/* =========================
+   Variables
+   ========================= */
+:root {
+  --uaqe-blue:   #1E50D6;
+  --bg-stripe:   #f4f6f9;
+  --card-border: #dce1e5;
+
+  /* Layout metrics */
+  --nav-h:    60px;  
+  --footer-h: 50px;  
+  --max-w:    1200px;
+}
+
+/* =========================
+   Page shell
+   ========================= */
+html, body { 
+  height: 100%; 
+  margin: 0; 
+  background: var(--bg-stripe); 
+}
+
+.content-stripe {
+  min-height: calc(100vh - var(--nav-h) - var(--footer-h));
+  display: flex;
+}
+
+.content-container { 
+  max-width: var(--max-w); 
+  margin: 0 auto; 
+}
+
+/* =========================
+   Navbar
+   ========================= */
+.navbar { background: var(--uaqe-blue) !important; }
+.navbar .navbar-brand,
+.navbar .nav-link { color: #fff !important; }
+.navbar .nav-link.active {
+  background: #fff !important;
+  color: var(--uaqe-blue) !important;
+  border-radius: 6px;
+}
+
+/* =========================
+   Cards
+   ========================= */
+.card {
+  border: 1px solid var(--card-border);
+  border-radius: 8px;
+  background: #fff;
+  box-shadow: 0 2px 6px rgba(0,0,0,.06);
+}
+.card-header { background: #f7f9fb; font-weight: 600; }
+.content-card { padding: 24px !important; }
+
+/* =========================
+   Sidebar
+   ========================= */
+.sidebar-panel {
+  border: 1px solid var(--card-border);
+  border-radius: 10px;
+  background: #fff;
+  position: sticky;
+  top: calc(var(--nav-h) + 24px);
+  height: calc(100vh - var(--nav-h) - 48px);
+  overflow: auto;
+}
+.sidebar-title { font-weight: 700; color: #1f2c38; }
+.sidebar-nav { gap: 6px; }
+
+.side-link {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  color: #2f3e50; font-weight: 500; text-decoration: none;
+}
+.side-link:hover { background: #f3f6ff; color: var(--uaqe-blue); }
+.sidebar-nav .nav-link.active.side-link {
+  background: #e9f1ff;
+  color: var(--uaqe-blue);
+  font-weight: 600;
+}
+
+/* =========================
+   Footer
+   ========================= */
+.site-footer {
+  background: #000;
+  color: #fff;
+  text-align: center;
+  padding: 14px 0;
+  width: 100%;
+}
+
+/* =========================
+   Utilities
+   ========================= */
+.map-placeholder {
+  height: 460px;
+  border: 1px dashed #cfd7de;
+  display: flex; align-items: center; justify-content: center;
+  background: #f8f9fa; color: #6c757d; font-size: 18px;
+}
+
+.legend-gradient {
+  height: 40px; border-radius: 8px;
+  background: linear-gradient(90deg, #e74c3c 0%, #b9c2cc 50%, var(--uaqe-blue) 100%);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 14px; color: #fff; font-weight: 600; font-size: 13px;
+}
+
+/* =========================
+   Responsive
+   ========================= */
+@media (max-width: 991px) {
+  .sidebar-panel { position: static; height: auto; overflow: visible; }
+  .content-container { padding: 0 12px; }
+}
+
+@media (max-width: 576px) {
+  .content-card { padding: 16px !important; }
+  .map-placeholder { height: 300px; font-size: 16px; }
+}
+
+/* =========================
+   Toggle Buttons
+   ========================= */
+/* Make toggle buttons same height as dropdowns */
+.version-toggle .btn {
+  border: none;
+  height: 38px;              /* same as .form-select height */
+  padding: 0 18px;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Rounded corners only at edges */
+.version-toggle .btn:first-child { 
+  border-top-left-radius: 6px; 
+  border-bottom-left-radius: 6px; 
+}
+.version-toggle .btn:last-child  { 
+  border-top-right-radius: 6px; 
+  border-bottom-right-radius: 6px; 
+}
+
+/* Active style (blue highlight) */
+.version-toggle .btn-primary {
+  background-color: var(--uaqe-blue);
+  border-color: var(--uaqe-blue);
+  color: #fff;
+}
+.version-toggle .btn-secondary {
+  background-color: #e9ecef;
+  color: #000;
+}

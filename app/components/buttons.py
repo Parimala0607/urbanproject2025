@@ -11,11 +11,11 @@ def data_version_toggle(id="data-version", value="v1"):
             {"label": "Version 2", "value": "v2"},
         ],
         value=value,
-        inputClassName="btn-check",            # hide real radio
-        labelClassName="btn btn-outline-primary me-2",   # add `me-2` for spacing
+        inputClassName="btn-check",            
+        labelClassName="btn btn-outline-primary me-2",   
         labelCheckedClassName="btn btn-primary",
-        className="version-toggle d-flex",     # make container flex
-        inline=True,                           # ensure inline layout
+        className="version-toggle d-flex",     
+        inline=True,                           
     )
 
 # 2. Pollutant Type Dropdown

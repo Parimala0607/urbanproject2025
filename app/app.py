@@ -1,5 +1,5 @@
 import dash
-from dash import dcc, html, Input, Output
+from dash import dcc, html, Input, Output, State
 import dash_bootstrap_components as dbc
 
 # Components
@@ -132,6 +132,23 @@ def highlight_active(pathname: str):
 
     classes = [cls(f) for f in active_flags]
     return (*active_flags, *classes)
+
+# -- Help Page FAQs Toggles -- 
+
+for i in range(len(help_guide.questions)):
+    @app.callback(
+        Output(f"collapse-{i}", "is_open"),
+        Output(f"toggle-icon-{i}", "children"),
+        Input(f"toggle-icon-{i}", "n_clicks"),
+        State(f"collapse-{i}", "is_open"),
+        prevent_initial_call=True,
+    )
+    def toggle_collapse(n, is_open, i=i):
+        if n:
+            new_state = not is_open
+            return new_state, ("-" if new_state else "+")
+        return is_open, "+"
+
 
 if __name__ == "__main__":
     app.run(debug=True)

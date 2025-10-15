@@ -3,9 +3,12 @@ from dash import dcc, html, Input, Output, State
 import dash_bootstrap_components as dbc
 
 # Components
+# from app import components
 from components.sidebar import sidebar
 from components.navbar import navbar
 from components.footer import footer
+from components.data_prep import STATES_DF
+from components.data_prep import DF
 
 # Pages
 from pages import (
@@ -15,6 +18,7 @@ from pages import (
     countries,
     states,
     help_guide,
+
 )
 
 external_stylesheets = [
@@ -148,6 +152,46 @@ for i in range(len(help_guide.questions)):
             new_state = not is_open
             return new_state, ("-" if new_state else "+")
         return is_open, "+"
+
+# State page - Call backs
+@app.callback(
+    Output("dd-state", "options"),
+    Output("dd-state", "value"),
+    Input("dd-country", "value"),
+    prevent_initial_call=False
+    )
+def filterStates(country):
+    states= STATES_DF[country]['State'].fillna('').astype(str)
+    filteredstates = sorted(states.unique())
+    options = [{"label": s, "value": s} for s in filteredstates if s]
+    first_value = options[0]["value"] if options else None
+    return options, first_value
+
+@app.callback(
+    Output("dd-year", "options"),
+    Output("dd-year", "value"),
+    Input("dd-country", "value"),
+    prevent_initial_call=False
+    )
+def filterYears(country):
+    options = [{'label': str(year), 'value': year} for year in sorted(DF[country]['Year'].unique())]
+    first_value = options[0]["value"] if options else None
+    return options, first_value
+
+@app.callback(
+    Output("dd-city", "options"),
+    Output("dd-city", "value"),
+    Input("dd-country", "value"),
+    Input("dd-state", "value"),
+    prevent_initial_call=False
+    )
+
+def filterCities(country, state):
+    df_data = DF[country]
+    filteredState= df_data[df_data['State'] == state]
+    options = [{'label': c, 'value': c} for c in sorted(filteredState["CityID"].unique())]
+    first_value = options[0]["value"] if options else None
+    return options, first_value
 
 
 if __name__ == "__main__":

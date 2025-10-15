@@ -50,3 +50,36 @@ def danger_button(id="danger-btn", label="Reset"):
 
 def secondary_button(id="secondary-btn", label="Back", href="/"):
     return dbc.Button(label, id=id, color="secondary", className="me-2", href=href)
+
+def country_dropdown(id="dd-country", options=list, value=str):
+    return dcc.Dropdown(
+        id=id,
+        options= options,
+        value=value,
+        clearable=False
+    )
+
+def state_dropdown(id="dd-state", options=list, value=str):
+        return dcc.Dropdown(
+        id=id,
+        options=options,
+        value=value,
+        clearable=False
+    )
+
+
+def year_dropdown(id="dd-year", options=list, value=int):
+    return dcc.Dropdown(
+        id=id,
+        options=options,
+        value=value,
+        clearable=False
+    )
+
+def city_dropdown(id=str, options=list, value=str):
+    return dcc.Dropdown(
+        id=id,
+        options=options,
+        value=value, 
+        clearable=False
+    )

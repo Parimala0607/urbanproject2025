@@ -16,12 +16,12 @@ def pollutant_type_dropdown(id="pollutant-type"):
     return dcc.Dropdown(
         id=id,
         options=[
-            {"label": "PM₂.₅", "value": "pm25"},
-            {"label": "NO₂", "value": "no2"},
-            {"label": "O₃", "value": "o3"},
-            {"label": "CO₂", "value": "co2"},
+            {"label": "PM₂.₅", "value": "PM"},
+            {"label": "NO₂", "value": "NO2"},
+            {"label": "O₃", "value": "O3"},
+            {"label": "CO₂", "value": "CO2"},
         ],
-        value="pm25",
+        value="PM",
         clearable=False
     )
 
@@ -30,12 +30,12 @@ def metric_dropdown(id="metric"):
     return dcc.Dropdown(
         id=id,
         options=[
-            {"label": "Concentration", "value": "concentration"},
-            {"label": "PAF", "value": "paf"},
-            {"label": "Cases", "value": "cases"},
-            {"label": "Rate", "value": "rate"},
+            {"label": "Concentration", "value": "Concentration"},
+            {"label": "PAF", "value": "PAF"},
+            {"label": "Cases", "value": "Cases"},
+            {"label": "Rate", "value": "Rates"},
         ],
-        value="concentration",
+        value="Concentration",
         clearable=False
     )
 

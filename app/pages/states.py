@@ -86,7 +86,29 @@ layout = html.Div([
             # Left: Map placeholder
             dbc.Col([
                 html.H6(id="map-title", className="mb-2"),
-                html.Div("Map coming soon…", className="map-placeholder rounded"),
+                html.Div(
+                # "Map coming soon…", className="map-placeholder rounded"),
+                dcc.Graph(
+                    id='shaded-states',
+                    hoverData={'points': [{'customdata': 'CA'}]},
+                    config={
+                        "modeBarButtonsToRemove": [
+                        "zoom2d", "pan2d", "select2d", "lasso2d", "zoomIn2d", "zoomOut2d",
+                        "autoScale2d", "resetScale2d", "hoverClosestCartesian",
+                        "hoverCompareCartesian"
+                    ],
+                    "displaylogo": False
+                    },
+                    style={
+                        "height": "100%",
+                        "width": "100%",
+                        "border": "none",
+                        "outline": "none",
+                        "backgroundColor": "#000000",
+                        "boxShadow": "none", 
+                    },
+                    )
+               ),
                 html.Div([
                     html.Span("Low", className="me-2"),
                     html.Div(style={
@@ -95,8 +117,7 @@ layout = html.Div([
                         "display": "inline-block", "borderRadius": "6px"
                     }, className="me-2"),
                     html.Span("High", className="me-3"),
-                    html.Span("Color Scale: Green (low) → Red (high)", className="text-muted small"),
-                    html.Span(" (Subnational overlay pending)", className="text-muted small ms-1")
+                    html.Span("Color Scale: Green (low) → Red (high)", className="text-muted small")
                 ], className="mt-2"),
             ], md=7),
 
@@ -157,47 +178,49 @@ layout = html.Div([
 # -------------------
 def register_callbacks(app):
 
-    @app.callback(
-        Output("store-version", "data"),
-        Output("data-version-v1", "color"),
-        Output("data-version-v2", "color"),
-        Input("data-version-v1", "n_clicks"),
-        Input("data-version-v2", "n_clicks"),
-        State("store-version", "data"),
-        prevent_initial_call=True,
-    )
-    def toggle_version(n1, n2, current):
-        trig = ctx.triggered_id
-        chosen = current
-        if trig == "data-version-v1":
-            chosen = "v1"
-        elif trig == "data-version-v2":
-            chosen = "v2"
-        c1 = "primary" if chosen == "v1" else "secondary"
-        c2 = "primary" if chosen == "v2" else "secondary"
-        return chosen, c1, c2
+    # -- Version Callback not needed as of now.
+    # @app.callback(
+    #     Output("store-version", "data"),
+    #     Output("data-version-v1", "color"),
+    #     Output("data-version-v2", "color"),
+    #     Input("data-version-v1", "n_clicks"),
+    #     Input("data-version-v2", "n_clicks"),
+    #     State("store-version", "data"),
+    #     prevent_initial_call=True,
+    # )
+    # def toggle_version(n1, n2, current):
+    #     trig = ctx.triggered_id
+    #     chosen = current
+    #     if trig == "data-version-v1":
+    #         chosen = "v1"
+    #     elif trig == "data-version-v2":
+    #         chosen = "v2"
+    #     c1 = "primary" if chosen == "v1" else "secondary"
+    #     c2 = "primary" if chosen == "v2" else "secondary"
+    #     return chosen, c1, c2
+
 
     # Titles
-    @app.callback(
-        Output("map-title", "children"),
-        Output("summary-title", "children"),
-        Output("trend-title", "children"),
-        Input("dd-country", "value"),
-        Input("dd-state", "value"),
-        Input("dd-city", "value"),
-    )
-    def update_titles(country, state, city):
-        city_label = {
-            "la": "Los Angeles",
-            "sf": "San Francisco",
-            "mumbai": "Mumbai",
-            "beijing": "Beijing",
-        }.get(city, "Selected City")
+    # @app.callback(
+    #     Output("map-title", "children"),
+    #     Output("summary-title", "children"),
+    #     Output("trend-title", "children"),
+    #     Input("dd-country", "value"),
+    #     Input("dd-state", "value"),
+    #     Input("dd-city", "value"),
+    # )
+    # def update_titles(country, state, city):
+    #     city_label = {
+    #         "la": "Los Angeles",
+    #         "sf": "San Francisco",
+    #         "mumbai": "Mumbai",
+    #         "beijing": "Beijing",
+    #     }.get(city, "Selected City")
 
-        map_title = f"State/Province Pollution Map ({country})"
-        summary_title = f"Summary for {state} & {city_label}, {state}"
-        trend_title = f"Pollutant Trend for {city_label}, {state} (2000–2019)"
-        return map_title, summary_title, trend_title
+    #     map_title = f"State/Province Pollution Map ({country})"
+    #     summary_title = f"Summary for {state} & {city_label}, {state}"
+    #     trend_title = f"Pollutant Trend for {city_label}, {state} (2000–2019)"
+    #     return map_title, summary_title, trend_title
 
     
     @app.callback(

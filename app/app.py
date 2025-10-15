@@ -1,14 +1,18 @@
 import dash
 from dash import dcc, html, Input, Output, State
 import dash_bootstrap_components as dbc
+import numpy as np
 
 # Components
 # from app import components
 from components.sidebar import sidebar
 from components.navbar import navbar
 from components.footer import footer
-from components.data_prep import STATES_DF
-from components.data_prep import DF
+from components import data_prep, const
+# from components.data_prep import STATES_DF
+# from components.data_prep import DF
+import plotly.express as px
+import plotly.graph_objects as go
 
 # Pages
 from pages import (
@@ -20,6 +24,11 @@ from pages import (
     help_guide,
 
 )
+
+STATES_DF = data_prep.STATES_DF
+DF = data_prep.DF
+c_gjson = data_prep.GJSON
+feature_id = {'China': 'properties.NAME_1', 'India': 'properties.st_nm'}
 
 external_stylesheets = [
     dbc.themes.FLATLY,
@@ -193,6 +202,127 @@ def filterCities(country, state):
     first_value = options[0]["value"] if options else None
     return options, first_value
 
+@app.callback(
+    Output('shaded-states', 'figure'),
+    [Input('dd-country', 'value'),
+     Input('pollutant-type', 'value'),
+     Input('dd-year', 'value'),
+     Input('dd-state', 'value'),
+     Input('metric', 'value'),
+    #  Input('state-version-store', 'data')
+     ]
+)
+def update_map(country, pollutant, year_value, state, metric):
+    # Force 'Concentration' metric for Version 2 (as it doesn't have health metrics)
+    # if version == '2' and metric != 'Concentration':
+    #     metric = 'Concentration'
+    version = '1'
+    # Get plot column based on version
+    plot_column = data_prep.get_column_name(version, metric, pollutant)
+    
+    # Get data for selected year
+    df_data = DF[country]
+    stats_data = data_prep.STATS[country]
+    m = stats_data['mean'].query('Year == @year_value').copy()
+    st = m.query('State == @state')
+    
+    unit_s = pollutant
+    
+    # Set appropriate units and formatting based on version
+    if version == '1':
+        # Version 1 formatting
+        if 'CO2' in plot_column:
+            if 'w_' in plot_column:  # We're not using this anymore but kept for compatibility
+                maxx = 50e6
+            else:
+                maxx = 7e6
+            m['text'] = '<b>' + m['State'] + '</b><br>' + const.UNITS[metric][unit_s] + ': ' + \
+                        round((m[plot_column].astype(float) / 1000000), 3).astype(str) + 'M'
+        else:
+            m['text'] = '<b>' + m['State'] + '</b><br>' + const.UNITS[metric][unit_s] + ': ' + \
+                        m[plot_column].round(2).astype(str)
+            if plot_column == 'Cases_NO2':
+                maxx = 1980
+            elif plot_column == 'Cases_PM':
+                maxx = 250
+            elif plot_column == 'Cases_O3':
+                maxx = 110
+            else:
+                maxx = m[plot_column].max()
+    else:
+        # Version 2 formatting (similar to countries.py)
+        units_label = const.UNITS_V2['Concentration'][unit_s] if hasattr(const, 'UNITS_V2') else const.UNITS['Concentration'][unit_s]
+        
+        if 'CO2' in plot_column:
+            m['text'] = '<b>' + m['State'] + '</b><br>' + units_label + ': ' + \
+                        m[plot_column].round(2).astype(str)
+            maxx = np.percentile(m[plot_column].dropna(), 90)  # 90th percentile
+        else:
+            m['text'] = '<b>' + m['State'] + '</b><br>' + units_label + ': ' + \
+                        m[plot_column].round(2).astype(str)
+            maxx = m[plot_column].max()
+    
+    # Create choropleth map
+    if country == 'United States':  #No outside geojson for USA so plot with plotly's internal USA-states locations
+        fig = go.Figure(data=go.Choropleth(
+            locations=m['State'], locationmode='USA-states', customdata=m['State'],
+            z=m[plot_column], hovertext=m['text'], hoverinfo='text',
+            colorscale=const.CS[metric], zmin=0, zmax=maxx, 
+            showscale=False
+        ))
+        fig.add_traces(data=go.Choropleth(
+            locations=st['State'], locationmode='USA-states',
+            z=st[plot_column], hoverinfo='skip',
+            colorscale=const.CS[metric],
+            marker=dict(line_width=3), zmin=0, zmax=maxx, 
+            showscale=False
+        ))
+        fig.update_geos(scope='usa')
+        
+    else:  ##Use the uploaded geojson files for China and India states
+        fig = go.Figure(data=go.Choropleth(
+            locations=m["State"], geojson=c_gjson[country], z=m[plot_column],
+            hovertext=m['text'], featureidkey=feature_id[country], hoverinfo='text',
+            colorscale=const.CS[metric], zmin=0, zmax=maxx,
+            showscale=False
+        ))
+        fig.add_traces(data=go.Choropleth(
+            locations=st['State'], geojson=c_gjson[country], featureidkey=feature_id[country],
+            z=st[plot_column], hoverinfo='skip',
+            colorscale=const.CS[metric], zmin=0, zmax=maxx,
+            marker=dict(line_width=3),
+            showscale=False
+        ))
+        fig.update_geos(fitbounds='locations', visible=False)
+    
+    fig.update_layout(
+        legend_title_text='',
+        margin={'l': 10, 'b': 10, 't': 10, 'r': 0},
+        hovermode='closest',
+        font=dict(
+            size=const.FONTSIZE,
+            family=const.FONTFAMILY
+        ),
+        geo=dict(
+            showland=True,
+            landcolor=const.MAP_COLORS['lake'],
+            coastlinewidth=0,
+            oceancolor=const.MAP_COLORS['ocean'],
+            subunitcolor="rgb(255, 255, 255)",
+            countrycolor=const.MAP_COLORS['land'],
+            countrywidth=0.5,
+            showlakes=True,
+            lakecolor=const.MAP_COLORS['ocean'],
+            showocean=True,
+            showcountries=True,
+            resolution=50,
+            bgcolor='#f5f5f5'
+        ),
+    )
+    fig.update_traces(customdata=m['State'])
+    fig.update_yaxes(title=plot_column)
+    
+    return fig
 
 if __name__ == "__main__":
     app.run(debug=True)

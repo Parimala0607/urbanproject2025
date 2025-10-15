@@ -22,7 +22,57 @@ DFILT_V2 = DFILT.copy()
 
 col_stats = ['Population','Pw_NO2','Pw_PM','Pw_O3','CO2','PAF_PM','PAF_NO2','PAF_O3','Cases_NO2','Cases_PM','Cases_O3','Rates_NO2','Rates_O3','Rates_PM'] #Column Selection
 col_stats_v2 = ['Population','Pw_NO2_V2','Pw_PM_V2','Pw_O3_V2','CO2_V2'] #Column Selection
+V1_COLUMN_MAPPING = {
+    'PM': 'Pw_PM',
+    'NO2': 'Pw_NO2',
+    'O3': 'Pw_O3',
+    'CO2': 'CO2'
+}
 
+def find_stats(dataframe, region, version):
+    # Select appropriate columns based on version
+    if version == '1':
+        cols = col_stats
+    else:  # version == '2'
+        cols = col_stats_v2
+    
+    # Mean by region/year
+    me = dataframe.groupby([region, 'Year']).mean(numeric_only=True)[cols].round(decimals=2)
+    me.Population = me.Population.round(decimals=-3)
+    me = me.reset_index()
+    
+    # Max by region/year
+    ma = dataframe.groupby([region, 'Year']).max(numeric_only=True)[cols].round(decimals=2)
+    ma.Population = me.Population
+    ma = ma.reset_index()
+    
+    # Min by region/year
+    mi = dataframe.groupby([region, 'Year']).min(numeric_only=True)[cols].round(decimals=2)
+    mi.Population = me.Population
+    mi = mi.reset_index()
+    
+    return me, ma, mi
+
+MEAN, MAX, MIN = find_stats(DFILT, 'Country', '1')
+MEAN_V2, MAX_V2, MIN_V2 = find_stats(DFILT_V2, 'Country', '2')
+
+def get_column_name(version, metric, pollutant):
+    # Version 2 only supports Concentration
+    # if version == '2':
+    #     return V2_COLUMN_MAPPING.get(pollutant, pollutant + '_V2')
+    
+    # Version 1 mapping
+    if metric == 'Concentration':
+        return V1_COLUMN_MAPPING[pollutant]
+    elif metric == 'PAF':
+        return f'PAF_{pollutant}'
+    elif metric == 'Cases':
+        return f'Cases_{pollutant}'
+    elif metric == 'Rates':
+        return f'Rates_{pollutant}'
+    
+    # Default to concentration if no match
+    return pollutant
 
 ## Regional (country or state) summary statistics (min/max, population-weighted mean) 
 def find_stats(dataframe, region, version):

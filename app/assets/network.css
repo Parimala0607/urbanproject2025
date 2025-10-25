@@ -1,0 +1,22 @@
+/* =========================
+   Networks (scoped)
+   ========================= */
+.networks-page { display: flex; flex-direction: column; gap: 1.5rem; }
+
+.networks-filters .card-header { background: #f7f9fb; font-weight: 600; color: #1E50D6; }
+.networks-filters label { font-size: 14px; font-weight: 600; margin-bottom: 4px; color: #2f3e50; }
+
+#regions .form-check { margin-right: 12px; margin-bottom: 6px; }
+#regions .form-check-label {
+  padding: 4px 10px; border-radius: 999px; border: 1px solid #d0d6dd;
+  background: #f8f9fa; font-size: 13px; font-weight: 500; transition: .2s;
+}
+#regions .form-check-input:checked + .form-check-label {
+  background: #1E50D6; color: #fff; border-color: #1E50D6;
+}
+
+.networks-graph h6 { font-weight: 600; color: #1f2c38; }
+.graph-subtitle { font-size: 12.5px; color: #6c757d; margin-top: 6px; }
+#city-stats { margin-top: 6px; line-height: 1.4; }
+
+@media (max-width: 768px) { .networks-graph { margin-top: 1rem; } }

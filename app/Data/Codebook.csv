@@ -1,0 +1,36 @@
+Column Name,Description
+ID,City ID
+Year,Year ranging from 2000 to 2019
+continent,Continent Name
+City,City name
+Country,Country name
+Latitude,Latitude in decimal degrees
+Longitude,Longitude in decimal degrees
+Population,Population count (all ages)
+PM,Annual average PM2.5 concentration (ug/m3) calculated as a simple mean across gridcells within each city
+Pw_PM,Annual average PM2.5 concentration (ug/m3) calculated as a population-weighted mean across gridcells within each city
+PAF_PM,Population Attributable Fraction (%) for PM2.5
+Cases_PM,Annual cases attributable to PM2.5
+Rates_PM,"Annual cases attributable to PM2.5 per 100,000 people"
+O3,Maximum 6-month average of the daily 8-hr maximum ozone concentration (ppb) as a simple mean across gridcells within each city
+Pw_O3,Maximum 6-month average of the daily 8-hr maximum ozone concentration (ppb) as a population-weighted mean across gridcells within each city
+PAF_O3,Population Attributable Fraction (%) for ozone
+Cases_O3,Annual cases attributable to ozone
+Rates_O3,"Annual cases attributable to ozone per 100,000 people"
+NO2,Annual average NO2 concentration (ppb) calculated as a simple mean across gridcells within each city
+Pw_NO2,Annual average NO2 concentration (ppb) calculated as a population-weighted mean across gridcells within each city
+PAF_NO2,Population Attributable Fraction (%) for NO2
+Cases_NO2,Annual cases attributable to NO2
+Rates_NO2,"Annual cases attributable to NO2 per 100,000 people"
+CO2,Annual average FFCO2 emissions (tonnes/city boundary) calculated as a simple mean across gridcells within each city
+Pop_ped,Population count (ages 1-18 years)
+GBDRegion,Global Burden of Disease Region
+GBDSuperRegion,Global Burden of Disease Super Region
+SDGRegion,Sustainable Development Goals Region
+WHORegion,World Health Organization Region
+WHOIncomeRegion,World Health Organization Income Region
+C40 Region,C40 Region
+c40,Participation in the C40 Network
+city_area,Area (m2) of the city boundary
+NAME_LIST,Full list of cities within each city boundary
+CityCountry,"Combined field of City, Country and ID to identify each location"
